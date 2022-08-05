@@ -9,14 +9,6 @@ const stats = new Stats(); // Stats를 사용하기 위한 메서드
 let camera, controls, scene, renderer; // 기본적인 Three.js 모듈이다.
 let mixer, skeletonHelper; // 스켈레톤 구현하기 위한 툴이다.
 
-//get_bvh_list();
-// //init_bvh();
-// init();
-// loadBVH();
-// animate();
-
-
-
 // -----------------------------------------------Three.js 의 기본 셋팅 ------------------------------------------
 /*
 *   기본은 Three.js에서 돌아가는 것이다. 그에 따라 몇가지 설정을 해주어야 한다.
@@ -75,48 +67,6 @@ function onWindowResize() {
 
 }
 
-// ---------------------------------------BVH 관련해서 서버와 통신 -------------------------------------------------
-// 사용하지 않는 부분. 이 부분은 비동기 방식 때문에 HTML 문에서 구현을 해두었음.
-let joint, motion;
-let projectID, title, updateTime;
-function get_bvh_list() {
-    $.ajax({
-        url: "https://www.vucoms.co.kr:8200/get_bvh_list",
-        type: "POST",
-        data: {
-            "url": "www.vucoms.co.kr",
-            "userID" : "solo"
-        },
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            for (let key in data){
-                console.log(data[key].PROJECTID);
-            }
-            // projectID = data.PROJECTID;
-            // title = data.TITLE;
-            // updateTime = data.UPDATETIME;
-            // console.log(projectID, title,updateTime);
-        }
-    });
-}
-function init_bvh() {
-    $.ajax({
-        url: "https://www.vucoms.co.kr:8200/get_bvh",
-        type: "POST",
-        data: {
-            "url": "https://www.vucoms.co.kr",
-            "projectID": "solo"
-        },
-        dataType: 'json',
-        success: function(data) {
-            joint = data.bvhJoint;
-            motion = data.bvhMotion;
-            console.log(joint, motion);
-        }
-    });
-}
-
 // ------------------------------------------------BVH Loader --------------------------------------------------
 /*
 *   BVH Loader
@@ -168,9 +118,6 @@ function loadBVH(strBVH) {
     mixer = new THREE.AnimationMixer(skeletonHelper);
     mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
 }
-
-
-// ----------------------------------------------test----------------------------------------------------------
 
 
 // -----------------------------------------------Animation 구현-------------------------------------------------

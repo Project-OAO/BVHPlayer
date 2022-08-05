@@ -12,16 +12,14 @@
         var strBVH = ''; // 여기에 이제 문자열로 된 BVH 정보가 저장된다.
     </script>
     <link type="text/css" rel="stylesheet" href="./css/main.css">
-    <canvas id='three-canvas'></canvas>
 </head>
 <body>
+<canvas id='three-canvas'></canvas>
 <script type="module">
     import {init,loadBVH,animate} from './js/main.js';
-    console.log(strBVH);
     // 송수신에 대한 부분
     let joint, motion;
     $(document).ready(function() {
-        //get_bvh(_projectID);
         read_bvh(_projectID);
     })
     function read_bvh(PID) {

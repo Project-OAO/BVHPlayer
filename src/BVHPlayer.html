@@ -31,15 +31,14 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
-                saveData(data);
-                console.log(strBVH);
+                concatStrBVH(data);
                 init();
                 loadBVH(strBVH);
                 animate();
             }
         });
     }
-    function saveData(data){
+    function concatStrBVH(data){
         for (let i = 0; i<data.length; i++){
             strBVH += data[i];
             strBVH += '\n';

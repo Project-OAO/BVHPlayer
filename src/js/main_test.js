@@ -11,9 +11,9 @@ let mixer, skeletonHelper; // 스켈레톤 구현하기 위한 툴이다.
 
 //get_bvh_list();
 // //init_bvh();
-// init();
-// loadBVH();
-// animate();
+//init();
+//loadBVH();
+//animate();
 
 
 
@@ -76,7 +76,7 @@ function onWindowResize() {
 }
 
 // ---------------------------------------BVH 관련해서 서버와 통신 -------------------------------------------------
-// 사용하지 않는 부분. 이 부분은 비동기 방식 때문에 HTML 문에서 구현을 해두었음.
+
 let joint, motion;
 let projectID, title, updateTime;
 function get_bvh_list() {
@@ -117,6 +117,10 @@ function init_bvh() {
     });
 }
 
+// --------------------------------------BVH Parser------------------------------------------------------------
+
+
+
 // ------------------------------------------------BVH Loader --------------------------------------------------
 /*
 *   BVH Loader
@@ -127,49 +131,26 @@ function init_bvh() {
 *
 *
 */
-function loadBVH(strBVH) {
+function loadBVH() {
     const loader = new BVHLoader(); // BVH Loader를 파싱 받는다.
 
 // BVH Loader를 통해 받은 정보는 result로 나오게 되는데, 이를 바탕으로 skeleton을 이용해서 구현하게 된다.
+//../../bvh/01/01_09.bvh
+    loader.load("../../bvh/test2.bvh", function (result) { // Url에 BVH Player를 구현해두면 된다.
+        skeletonHelper = new THREE.SkeletonHelper(result.skeleton.bones[0]);
+        skeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
 
+        const boneContainer = new THREE.Group();
+        boneContainer.add(result.skeleton.bones[0]);
 
-    // loader.load("../../bvh/test2.bvh", function (result) { // Url에 BVH Player를 구현해두면 된다.
-    //     skeletonHelper = new THREE.SkeletonHelper(result.skeleton.bones[0]);
-    //     skeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
-    //
-    //     const boneContainer = new THREE.Group();
-    //     boneContainer.add(result.skeleton.bones[0]);
-    //
-    //     scene.add(skeletonHelper);
-    //     scene.add(boneContainer);
-    //
-    //     // play animation
-    //     mixer = new THREE.AnimationMixer(skeletonHelper);
-    //     mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
-    // })
-    //console.log(strBVH);
+        scene.add(skeletonHelper);
+        scene.add(boneContainer);
 
-
-// 위에 주석처리된 부분은 예제코드 부분이고, 해당 부분에서 parse만 따로 뺴내와서 스켈레톤 정보로 바꾼 다음 셋업해주는 형태로 바뀜.
-
-
-// 이 부분이 핵심으로, 여기서 구현된 loader가 해당 내용을 스켈레톤 정보로 뿌리게 됨.
-    let result = loader.parse(strBVH);
-    skeletonHelper = new THREE.SkeletonHelper(result.skeleton.bones[0]);
-    skeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
-
-    const boneContainer = new THREE.Group();
-    boneContainer.add(result.skeleton.bones[0]);
-
-    scene.add(skeletonHelper);
-    scene.add(boneContainer);
-
-    // play animation
-    mixer = new THREE.AnimationMixer(skeletonHelper);
-    mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
+        // play animation
+        mixer = new THREE.AnimationMixer(skeletonHelper);
+        mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
+    })
 }
-
-
 // ----------------------------------------------test----------------------------------------------------------
 
 

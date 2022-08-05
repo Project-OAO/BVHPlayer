@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+<div>
+    <table id="showTable">
+
+    </table>
+</div>
+    <script>
+        $(document).ready(function() {
+            get_bvh_list();
+        })
+        function get_bvh_list() {
+            $.ajax({
+                url: "https://www.vucoms.co.kr:8200/get_bvh_list",
+                type: "POST",
+                data: {
+                    "url": "www.vucoms.co.kr",
+                    "userID" : "solo"
+                },
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    let str = '';
+                    for (let key in data){
+                        console.log(data[key].PROJECTID);
+                        str += '<tr>';
+                        str += '<td style="cursor:pointer" onclick="getID(\''+data[key].PROJECTID+'\')">' +
+                                data[key].PROJECTID +
+                                '</td>';
+                        str += '</tr>';
+                    }
+                    $('#showTable').html(str);
+                }
+            })}
+        function getID(_projectID){
+            console.log(_projectID);
+            window.location.href = "./BVHPlayer.html?url=www.vucoms.co.kr&projectID=" + _projectID;
+        }
+    </script>
+</body>
+</html>

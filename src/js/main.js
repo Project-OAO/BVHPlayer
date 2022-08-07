@@ -1,13 +1,13 @@
 import * as THREE from './jsm/build/three.module.js'
 import {OrbitControls} from "./jsm/controls/OrbitControls.js";
 import {BVHLoader} from "./jsm/loaders/BVHLoader.js";
-import Stats from './jsm/interfaces/Stats.js';
 
 const clock = new THREE.Clock(); // Animation 동작을 위해서 구현해두었다.
-const stats = new Stats(); // Stats를 사용하기 위한 메서드
 
 let camera, controls, scene, renderer; // 기본적인 Three.js 모듈이다.
 let mixer, skeletonHelper; // 스켈레톤 구현하기 위한 툴이다.
+
+let animeStatus = true;
 
 // -----------------------------------------------Three.js 의 기본 셋팅 ------------------------------------------
 /*
@@ -19,6 +19,10 @@ let mixer, skeletonHelper; // 스켈레톤 구현하기 위한 툴이다.
 function init() {
     // 캔바스 설정
     const canvas = document.querySelector("#three-canvas");
+    const button = document.querySelector("#togleButton");
+
+    // 버튼 누를 시 애니메이션 동작에 대한 설정
+    button.addEventListener("click", togleAnimate);
 
     // Scene에 대한 설정
     scene = new THREE.Scene();
@@ -52,7 +56,6 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize ); // 화면 사이즈가 변화하면 그에 맞춰서 변화해야 하는데 이에 대한 맞춤 설정이다.
 
-    document.body.appendChild(stats.domElement); // 이는 Frame 수를 체크하기 위한 것으로 차후 어늦어도 코드가 구현이 되면 제외시키자.
     // gui.add(camera.position,'y',-1000,1000,0.01);
 
 }
@@ -119,19 +122,30 @@ function loadBVH(strBVH) {
     mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
 }
 
+function togleAnimate(){
+    if(animeStatus == true) {
+        animeStatus = false;
+    }
+    else if(animeStatus == false){
+        animeStatus = true;
+    }
+}
 
 // -----------------------------------------------Animation 구현-------------------------------------------------
 function animate() {
 
-    stats.update(); // Frame 수 표시를 위한 메서드로 나중에 필요 없어지면 버리자.
-
-    requestAnimationFrame( animate );
-
     const delta = clock.getDelta();
 
-    if ( mixer ) mixer.update( delta ); // Mixer 구동을 위한 구현부
+    if(animeStatus == true) {
+        if ( mixer ) mixer.update( delta ); // Mixer 구동을 위한 구현부
+        renderer.render( scene, camera );
+        requestAnimationFrame(animate);
+    }
+    else if(animeStatus == false){
+        requestAnimationFrame(animate);
+    }
 
-    renderer.render( scene, camera );
+
 
 }
-export{init,loadBVH,animate}
+export{init,loadBVH,animate, togleAnimate}

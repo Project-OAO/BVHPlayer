@@ -16,13 +16,9 @@ let animeStatus = true;
 *
 */
 
-function init() {
+function initBvh() {
     // 캔바스 설정
     const canvas = document.querySelector("#three-canvas");
-    const button = document.querySelector("#togleButton");
-
-    // 버튼 누를 시 애니메이션 동작에 대한 설정
-    button.addEventListener("click", togleAnimate);
 
     // Scene에 대한 설정
     scene = new THREE.Scene();
@@ -122,14 +118,7 @@ function loadBVH(strBVH) {
     mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
 }
 
-function togleAnimate(){
-    if(animeStatus == true) {
-        animeStatus = false;
-    }
-    else if(animeStatus == false){
-        animeStatus = true;
-    }
-}
+
 
 // -----------------------------------------------Animation 구현-------------------------------------------------
 function animate() {
@@ -145,7 +134,13 @@ function animate() {
         requestAnimationFrame(animate);
     }
 
-
-
 }
-export{init,loadBVH,animate, togleAnimate}
+
+function playAnimate(){
+    animeStatus = true;
+}
+function stopAnimate(){
+    animeStatus = false;
+}
+
+export{initBvh,loadBVH,animate, playAnimate, stopAnimate}

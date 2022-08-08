@@ -135,7 +135,14 @@ function animate() {
     }
 
 }
-
+function togleAnimate(){
+    if(animeStatus == true) {
+        animeStatus = false;
+    }
+    else if(animeStatus == false){
+        animeStatus = true;
+    }
+}
 function playAnimate(){
     animeStatus = true;
 }
@@ -143,4 +150,4 @@ function stopAnimate(){
     animeStatus = false;
 }
 
-export{initBvh,loadBVH,animate, playAnimate, stopAnimate}
+export{initBvh,loadBVH,animate, playAnimate, stopAnimate, togleAnimate}

@@ -80,28 +80,6 @@ function loadBVH(strBVH) {
     const loader = new BVHLoader(); // BVH Loader를 파싱 받는다.
 
 // BVH Loader를 통해 받은 정보는 result로 나오게 되는데, 이를 바탕으로 skeleton을 이용해서 구현하게 된다.
-
-
-    // loader.load("../../bvh/test2.bvh", function (result) { // Url에 BVH Player를 구현해두면 된다.
-    //     skeletonHelper = new THREE.SkeletonHelper(result.skeleton.bones[0]);
-    //     skeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
-    //
-    //     const boneContainer = new THREE.Group();
-    //     boneContainer.add(result.skeleton.bones[0]);
-    //
-    //     scene.add(skeletonHelper);
-    //     scene.add(boneContainer);
-    //
-    //     // play animation
-    //     mixer = new THREE.AnimationMixer(skeletonHelper);
-    //     mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
-    // })
-    //console.log(strBVH);
-
-
-// 위에 주석처리된 부분은 예제코드 부분이고, 해당 부분에서 parse만 따로 뺴내와서 스켈레톤 정보로 바꾼 다음 셋업해주는 형태로 바뀜.
-
-
 // 이 부분이 핵심으로, 여기서 구현된 loader가 해당 내용을 스켈레톤 정보로 뿌리게 됨.
     let result = loader.parse(strBVH);
     skeletonHelper = new THREE.SkeletonHelper(result.skeleton.bones[0]);
@@ -117,8 +95,16 @@ function loadBVH(strBVH) {
     mixer = new THREE.AnimationMixer(skeletonHelper);
     mixer.clipAction(result.clip).setEffectiveWeight(1.0).play();
 }
-
-
+// BVH String을 BVH 파일 양식으로 바꾸어주는 함수
+// 서버에서 받아온 BVH 데이터가 문자열 형태로 줄단위로 쪼개져서 오기 떄문에 다시 이어주는 작업을 해주는 함수.
+function concatStrBVH(data){ // strBVH == return value
+    let strBVH = '';
+    for (let i = 0; i<data.length; i++){
+        strBVH += data[i];
+        strBVH += '\n';
+    }
+    return strBVH;
+}
 
 // -----------------------------------------------Animation 구현-------------------------------------------------
 function animate() {
@@ -135,6 +121,7 @@ function animate() {
     }
 
 }
+// animation 동작 제어 (pause, run)
 function togleAnimate(){
     if(animeStatus == true) {
         animeStatus = false;
@@ -149,5 +136,4 @@ function playAnimate(){
 function stopAnimate(){
     animeStatus = false;
 }
-
-export{initBvh,loadBVH,animate, playAnimate, stopAnimate, togleAnimate}
+export{initBvh,loadBVH,animate, playAnimate, stopAnimate, togleAnimate, concatStrBVH}

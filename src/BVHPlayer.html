@@ -3,48 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>BVHPlayer</title>
+    <!--css-->
+    <link type="text/css" rel="stylesheet" href="./css/main.css">
+    <!--script-->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script>
         const params = new URLSearchParams(document.location.search);
-        var _url	= params.get("url");
-        var _projectID	= params.get("projectID");
-        var strBVH = ''; // 여기에 이제 문자열로 된 BVH 정보가 저장된다.
+        let _url	= params.get("url");
+        let _projectID	= params.get("projectID");
     </script>
-    <link type="text/css" rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-<canvas id='three-canvas'></canvas>
-<script type="module">
-    import {init,loadBVH,animate} from './js/main.js';
-    // 송수신에 대한 부분
-    $(document).ready(function() {
-        read_bvh(_projectID);
-    })
-    function read_bvh(PID) {
-        $.ajax({
-            url: "https://www.vucoms.co.kr:8200/read_bvh",
-            type: "POST",
-            data: {
-                "url": _url,
-                "projectID": PID
-            },
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                concatStrBVH(data);
-                init();
-                loadBVH(strBVH);
-                animate();
-            }
-        });
-    }
-    function concatStrBVH(data){
-        for (let i = 0; i<data.length; i++){
-            strBVH += data[i];
-            strBVH += '\n';
+    <!--canvas-->
+    <canvas id='three-canvas'></canvas>
+    <!--BVH Player module-->
+    <script type="module">
+        import {initBvh,loadBVH,animate} from './js/main.js';
+        window.initBvh = initBvh;
+        window.loadBVH = loadBVH;
+        window.animate = animate;
+    </script>
+    <!--Import and play BVH-->
+    <script>
+        // 송수신에 대한 부분
+        $(document).ready(function() {
+            read_bvh(_projectID);
+        })
+        function read_bvh(PID) {
+            $.ajax({
+                url: "https://www.vucoms.co.kr:8200/read_bvh",
+                type: "POST",
+                data: {
+                    "url": _url,
+                    "projectID": PID
+                },
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    concatStrBVH(data);
+                    initBvh();
+                    loadBVH(strBVH);
+                    animate();
+                }
+            });
         }
-    }
-</script>
-<button id="togleButton" type="button">start/pause</button>
+        let strBVH = ''; // 여기에 이제 문자열로 된 BVH 정보가 저장된다.
+        function concatStrBVH(data){
+            for (let i = 0; i<data.length; i++){
+                strBVH += data[i];
+                strBVH += '\n';
+            }
+        }
+    </script>
 </body>
 </html>

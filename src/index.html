@@ -17,9 +17,11 @@
     <canvas id="three-canvas"></canvas>
     <!-- Import and play BVH -->
     <script type="module">
-      import { initBvh, animate } from "./js/main.js";
+      import { initBvh, loadGLTF, animate } from "./js/main.js";
       window.initBvh = initBvh;
+      window.loadGLTF = loadGLTF;
       window.animate = animate;
+      document.body.innerHTML = loadGLTF();
     </script>
   </body>
 </html>

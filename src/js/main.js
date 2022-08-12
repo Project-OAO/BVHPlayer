@@ -90,4 +90,13 @@ function playAnimate() {
 function stopAnimate() {
   animeStatus = false;
 }
-export { initBvh, animate, playAnimate, stopAnimate, togleAnimate };
+
+function loadGLTF() {
+  const gltfLoader = new GLTFLoader();
+
+  gltfLoader.load("./models/skeleton.glb", (gltf) => {
+    console.log("success");
+    console.log(gltf);
+  });
+}
+export { initBvh, loadGLTF, animate, playAnimate, stopAnimate, togleAnimate };

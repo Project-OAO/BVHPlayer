@@ -2,13 +2,13 @@ import * as THREE from "./jsm/build/three.module.js";
 import { OrbitControls } from "./jsm/controls/OrbitControls.js";
 import { BVHLoader } from "./jsm/loaders/BVHLoader.js";
 import { GLTFLoader } from "./jsm/loaders/GLTFLoader.js";
-
 const clock = new THREE.Clock();
 
 let camera, controls, scene, renderer;
-let mixer, skeletonHelper;
+let mixer, skeleton, model;
 
 let animeStatus = true;
+// let animeStatus;
 
 // -----------------------------------------------Three.js 의 기본 셋팅 ------------------------------------------
 /*
@@ -64,39 +64,43 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function loadGLTF() {
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(100, 100),
+    new THREE.MeshPhongMaterial({ color: 0xff3333, depthWrite: false })
+  );
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  const gltfLoader = new GLTFLoader();
+
+  gltfLoader.load("./models/Xbot.glb", (gltf) => {
+    console.log(gltf);
+    model = gltf.scene;
+    scene.add(model);
+    console.log(model);
+    skeleton = new THREE.SkeletonHelper(model);
+    console.log(skeleton);
+    skeleton.visible = true;
+    scene.add(skeleton);
+
+    mixer = new THREE.AnimationMixer(model);
+    const actions = [];
+    actions[0] = mixer.clipAction(gltf.animations[0]);
+    actions[0].play();
+  });
+}
+
 // -----------------------------------------------Animation 구현-------------------------------------------------
 function animate() {
   const delta = clock.getDelta();
-
   if (animeStatus == true) {
     if (mixer) mixer.update(delta); // Mixer 구동을 위한 구현부
+    requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
   } else if (animeStatus == false) {
     requestAnimationFrame(animate);
   }
 }
-// animation 동작 제어 (pause, run)
-function togleAnimate() {
-  if (animeStatus == true) {
-    animeStatus = false;
-  } else if (animeStatus == false) {
-    animeStatus = true;
-  }
-}
-function playAnimate() {
-  animeStatus = true;
-}
-function stopAnimate() {
-  animeStatus = false;
-}
 
-function loadGLTF() {
-  const gltfLoader = new GLTFLoader();
-
-  gltfLoader.load("./models/skeleton.glb", (gltf) => {
-    console.log("success");
-    console.log(gltf);
-  });
-}
-export { initBvh, loadGLTF, animate, playAnimate, stopAnimate, togleAnimate };
+export { initBvh, loadGLTF, animate };

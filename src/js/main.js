@@ -1,6 +1,7 @@
 import * as THREE from "./jsm/build/three.module.js";
 import { OrbitControls } from "./jsm/controls/OrbitControls.js";
 import { BVHLoader } from "./jsm/loaders/BVHLoader.js";
+import { GLTFLoader } from "./jsm/loaders/GLTFLoader.js";
 
 const clock = new THREE.Clock();
 

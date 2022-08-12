@@ -1,47 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Main</title>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-</head>
-<body>
-<div>
-    <table id="showTable">
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Skeleton Practice</title>
 
-    </table>
-</div>
-    <script>
-        $(document).ready(function() {
-            get_bvh_list();
-        })
-        function get_bvh_list() {
-            $.ajax({
-                url: "https://www.vucoms.co.kr:8200/get_bvh_list",
-                type: "POST",
-                data: {
-                    "url": "www.vucoms.co.kr",
-                    "userID" : "solo"
-                },
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data);
-                    let str = '';
-                    for (let key in data){
-                        console.log(data[key].PROJECTID);
-                        str += '<tr>';
-                        str += '<td style="cursor:pointer" onclick="getID(\''+data[key].PROJECTID+'\')">' +
-                                data[key].PROJECTID +
-                                '</td>';
-                        str += '</tr>';
-                    }
-                    $('#showTable').html(str);
-                }
-            })}
-        function getID(_projectID){
-            console.log(_projectID);
-            window.location.href = "./BVHPlayer.html?url=www.vucoms.co.kr&projectID=" + _projectID;
-        }
+    <link type="text/css" rel="stylesheet" href="./css/main.css" />
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <!-- <script>
+      const params = new URLSearchParams(document.location.search);
+      let _url = params.get("url");
+      let _projectID = params.get("projectID");
+    </script> -->
+  </head>
+  <body>
+    <!-- canvas -->
+    <canvas id="three-canvas"></canvas>
+    <!-- Import and play BVH -->
+    <script type="module">
+      import { initBvh, loadBVH, animate } from "./js/main.js";
+      window.initBvh = init;
+      window.loadBVH = loadBVH;
+      window.animate = animate;
     </script>
-</body>
+    <!-- <script>
+      // 송수신에 대한 부분
+      $(document).ready(function () {
+        read_bvh(_projectID);
+      });
+      function read_bvh(PID) {
+        $.ajax({
+          url: "https://www.vucoms.co.kr:8200/read_bvh",
+          type: "POST",
+          data: {
+            url: _url,
+            projectID: PID,
+          },
+          dataType: "json",
+          cache: false,
+          success: function (data) {
+            concatStrBVH(data);
+            initBvh();
+            loadBVH(strBVH);
+            animate();
+          },
+        });
+      }
+      let strBVH = ""; // 여기에 이제 문자열로 된 BVH 정보가 저장된다.
+      function concatStrBVH(data) {
+        for (let i = 0; i < data.length; i++) {
+          strBVH += data[i];
+          strBVH += "\n";
+        }
+      } 
+    </script>-->
+  </body>
 </html>
